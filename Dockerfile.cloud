@@ -1,0 +1,21 @@
+FROM python:3.9
+
+WORKDIR /app
+COPY ./src /app/src
+COPY ./csvs /app/csvs
+COPY ./pdfs /app/pdfs
+COPY ./projectDB /app/projectDB
+
+RUN apt-get update && apt-get install -y \
+    libasound2-dev \
+    ffmpeg \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install --upgrade pip
+COPY src/requirements.txt /app/requirements.txt
+RUN pip install -r /app/requirements.txt
+
+EXPOSE 8000
+
+CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "8000"]

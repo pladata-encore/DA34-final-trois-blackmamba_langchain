@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  langchain:
+    build: .
+    image: my_custom_image_name:langchain
+    volumes:
+      - ./.venv:/app/.venv
+      - .:/app
+      - ./projectDB:/app/projectDB
+    ports:
+      - "8000:8000"
+    environment:
+      - WATCHFILES_FORCE_POLLING=true
+
+networks:
+  my_custom_network:
+    driver: bridge
