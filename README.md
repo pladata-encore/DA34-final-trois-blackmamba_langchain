@@ -1,132 +1,83 @@
-# DA34-final-trois-blackmamba_langchain
+# DriveChat AI Assistant
 
-```markdown
-# LangChain 애플리케이션
+DriveChat은 차량 내 AI 비서 시스템으로, 차량 정보 제공, 음악 재생, 그리고 성수동 맛집 추천 기능을 제공합니다. FastAPI를 기반으로 구축되었으며, 자연어 처리를 위해 LangChain과 OpenAI의 GPT-4o를 활용합니다.
 
-이 프로젝트는 LangChain 기반 애플리케이션입니다. 설정에는 Docker 컨테이너를 빌드하고 AWS ECR에 업로드한 후 AWS App Runner를 사용하여 배포하는 과정이 포함되어 있습니다.
+## 주요 기능
 
-## 프로젝트 구조
+1. **차량 정보 제공**: 사용자의 질문에 대해 차량 관련 정보를 제공합니다.
+2. **음악 재생**: YouTube API를 통해 음악을 검색하고 재생합니다.
+3. **성수동 맛집 추천**: 지역 맛집 정보를 CSV 파일에서 추출하여 추천합니다.
 
-- `docker-compose.yaml`: Docker의 서비스, 네트워크 및 볼륨을 정의합니다.
-- `Dockerfile.cloud`: Docker 이미지를 빌드하기 위한 Dockerfile입니다.
-- `main.py`: 애플리케이션의 메인 진입점입니다.
-- `requirements.txt`: Python 종속성을 나열합니다.
+## 기술 스택
 
-## 사전 요구 사항
-
+- FastAPI
+- LangChain
+- OpenAI GPT-4o
+- YouTube API
 - Docker
-- AWS CLI
-- AWS ECR 저장소
-- AWS App Runner
+- Python 3.9
 
-## 설정 및 사용 방법
+## 설치 및 실행
 
-### 1. 로컬 환경에서 Docker 컨테이너 실행
+### 환경 설정
+
+1. `.env` 파일을 생성하고 필요한 API 키를 설정합니다:
+
+```
+OPENAI_API_KEY=your_openai_api_key
+GOOGLE_API_KEY=your_google_api_key
+```
+
+### Docker를 이용한 실행
+
+1. Docker 이미지 빌드:
+
+```bash
+docker build -t drivechat-ai -f Dockerfile.cloud .
+```
+
+2. Docker 컨테이너 실행:
+
+```bash
+docker run -p 8000:8000 -v $(pwd)/.env:/app/.env drivechat-ai
+```
+
+### Docker Compose를 이용한 실행
+
+1. `docker-compose.yaml` 파일이 있는 디렉토리에서 다음 명령어를 실행합니다:
 
 ```bash
 docker-compose up --build
 ```
 
-### 2. AWS ECR에 Docker 이미지 업로드
+## API 엔드포인트
 
-1. AWS CLI를 통해 로그인:
+- `GET /`: 헬스 체크
+- `GET /query`: 사용자 질의 처리
+- `GET /stop_music`: 음악 재생 중지
 
-    ```bash
-    aws ecr get-login-password --region <your-region> | docker login --username AWS --password-stdin <your-account-id>.dkr.ecr.<your-region>.amazonaws.com
-    ```
+## 프로젝트 구조
 
-2. ECR 리포지토리 생성:
-
-    ```bash
-    aws ecr create-repository --repository-name langchain-repo --region <your-region>
-    ```
-
-3. Docker 이미지 태그 지정:
-
-    ```bash
-    docker tag my_custom_image_name:langchain <your-account-id>.dkr.ecr.<your-region>.amazonaws.com/langchain-repo:latest
-    ```
-
-4. Docker 이미지 푸시:
-
-    ```bash
-    docker push <your-account-id>.dkr.ecr.<your-region>.amazonaws.com/langchain-repo:latest
-    ```
-
-### 3. AWS App Runner를 사용하여 컨테이너 실행
-
-1. AWS Management Console에서 App Runner로 이동합니다.
-2. 새 서비스 생성 버튼을 클릭합니다.
-3. 소스 타입을 컨테이너 레지스트리로 선택합니다.
-4. 배포할 ECR 이미지를 선택합니다.
-5. 서비스 설정을 완료하고 서비스를 생성합니다.
-
-## 파일 설명
-
-### `docker-compose.yaml`
-
-Docker Compose 파일로, 여러 컨테이너를 정의하고 관리합니다. 이 파일은 `langchain`이라는 서비스를 정의하며, 로컬 환경에서의 개발 및 테스트를 용이하게 합니다.
-
-```yaml
-version: '3.8'
-services:
-  langchain:
-    build: .
-    image: my_custom_image_name:langchain
-    volumes:
-      - ./.venv:/app/.venv
-      - .:/app
-      - ./projectDB:/app/projectDB
-    ports:
-      - "8000:8000"
-    environment:
-      - WATCHFILES_FORCE_POLLING=true
-
-networks:
-  my_custom_network:
-    driver: bridge
+```
+.
+├── src/
+│   ├── main.py
+│   └── requirements.txt
+├── csvs/
+│   └── seongsu_restaurant_final.csv
+├── pdfs/
+│   └── (차량 관련 PDF 문서들)
+├── projectDB/
+│   └── (벡터 데이터베이스 파일들)
+├── Dockerfile.cloud
+├── docker-compose.yaml
+└── README.md
 ```
 
-### `Dockerfile.cloud`
+## 개발 및 기여
 
-클라우드 환경에서 사용될 Docker 이미지를 빌드하기 위한 Dockerfile입니다. 이 파일을 사용하여 애플리케이션을 컨테이너화합니다.
+이 프로젝트는 지속적으로 개발 중입니다. 버그 리포트, 기능 제안, 또는 풀 리퀘스트는 언제나 환영합니다.
 
-### `main.py`
+## 라이센스
 
-애플리케이션의 메인 진입점으로, FastAPI 서버를 실행합니다. 이 파일에서 애플리케이션의 라우팅과 비즈니스 로직을 정의합니다.
-
-### `requirements.txt`
-
-애플리케이션이 의존하는 Python 패키지를 나열한 파일입니다. 다음 명령어를 사용하여 필요한 패키지를 설치할 수 있습니다:
-
-```bash
-pip install -r requirements.txt
-```
-
-```plaintext
-fastapi==0.110.3
-pydantic==2.7.1
-pytube==15.0.0
-pydub==0.25.1
-simpleaudio==1.0.4
-google-api-python-client==2.130.0
-python-dotenv==1.0.1
-pdfplumber==0.5.28
-langchain==0.2.6
-langchain-openai==0.1.11
-langchain-community==0.2.6
-pandas==2.2.2
-chromadb==0.5.3
-uvicorn[standard]==0.20.0
-sqlalchemy==2.0.3
-pymysql==1.0.2
-aiomysql==0.1.1
-pytest-asyncio==0.20.3
-aiosqlite==0.18.0
-httpx>=0.27.0
-```
-
-이 설명서를 통해 프로젝트를 설정하고 AWS에 배포할 수 있습니다. 추가적인 도움이 필요하면, 문서를 참조하거나 담당자에게 문의하세요.
-```
-
-이 `README.md` 파일은 각 파일의 목적과 전체 설정 및 배포 과정을 안내합니다. 필요에 따라 파일 내용을 조정해 주세요.
+이 프로젝트는 MIT 라이센스 하에 배포됩니다. 자세한 내용은 `LICENSE` 파일을 참조하세요.
