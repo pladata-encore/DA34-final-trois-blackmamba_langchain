@@ -87,5 +87,4 @@ docker-compose up --build
 ## Related Git
 - Flutter 앱 코드 : https://github.com/pladata-encore/DA34-final-trois-blackmamba_client_prod
 - 앱 기본기능 API 코드 : https://github.com/pladata-encore/DA34-final-trois-blackmamba_api
-- Langchain API 코드 : https://github.com/pladata-encore/DA34-final-trois-blackmamba_langchain
 - Local Web 서버 코드 : https://github.com/pladata-encore/DA34-final-trois-blackmamba_web
