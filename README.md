@@ -1,3 +1,4 @@
+# Upper Git: https://github.com/pladata-encore/DA34-final-trois-blackmamba.git
 # DriveChat AI Assistant
 
 DriveChat은 차량 내 AI 비서 시스템으로, 차량 정보 제공, 음악 재생, 그리고 성수동 맛집 추천 기능을 제공합니다. FastAPI를 기반으로 구축되었으며, 자연어 처리를 위해 LangChain과 OpenAI의 GPT-4o를 활용합니다.
@@ -81,3 +82,9 @@ docker-compose up --build
 ## 라이센스
 
 이 프로젝트는 MIT 라이센스 하에 배포됩니다. 자세한 내용은 `LICENSE` 파일을 참조하세요.
+
+## Related Git
+- Flutter 앱 코드 : https://github.com/pladata-encore/DA34-final-trois-blackmamba_client_prod
+- 앱 기본기능 API 코드 : https://github.com/pladata-encore/DA34-final-trois-blackmamba_api
+- Langchain API 코드 : https://github.com/pladata-encore/DA34-final-trois-blackmamba_langchain
+- Local Web 서버 코드 : https://github.com/pladata-encore/DA34-final-trois-blackmamba_web
